@@ -4,11 +4,10 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes'); // Import the auth routes
-// index.js
-require('dotenv').config(); // Add this line at the very top of your entry file
+const snippetRoutes = require('./routes/snippetRoutes');
+const blogRoutes = require('./routes/blogRoutes'); // Import blog routes
 
-
-// dotenv.config(); // Load environment variables from .env file
+require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
 
@@ -23,9 +22,11 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Use authentication routes
 app.use('/api/auth', authRoutes); // Mount the auth routes
+app.use('/api/snippets', snippetRoutes); // Mount the Snippet route
+app.use('/api/blogs', blogRoutes); // Mount the Blog route
 
 // Your routes and other logic here
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
     res.send('Welcome to the DevVerse Home!');
 });
 
