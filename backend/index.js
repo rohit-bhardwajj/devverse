@@ -1,4 +1,3 @@
-// backend/index.js
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -6,8 +5,9 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes'); // Import the auth routes
 const snippetRoutes = require('./routes/snippetRoutes');
 const blogRoutes = require('./routes/blogRoutes'); // Import blog routes
+const path = require('path'); // Add this line
 
-require('dotenv').config(); // Load environment variables from .env file
+dotenv.config(); // Load environment variables from .env file
 
 const app = express();
 
@@ -29,6 +29,9 @@ app.use('/api/blogs', blogRoutes); // Mount the Blog route
 app.get('/', (req, res) => {
     res.send('Welcome to the DevVerse Home!');
 });
+
+// Static path for image uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 3000; // Default to 3000 if PORT is not set
 app.listen(PORT, () => {

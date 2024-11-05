@@ -6,20 +6,20 @@ const blogSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 3, // Optional: enforce minimum title length
+        minlength: 3,
     },
     content: {
         type: String,
         required: true,
-        minlength: 10, // Optional: enforce minimum content length
+        minlength: 10,
     },
     tags: {
-        type: [String], // Array of strings for tags
-        default: [],    // Empty array if no tags provided
+        type: [String],
+        default: [],
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',    // Reference to the User model if you have one
+        ref: 'User',
         required: true,
     },
     views: {
@@ -29,6 +29,20 @@ const blogSchema = new mongoose.Schema({
     likes: {
         type: Number,
         default: 0,
+    },
+    isVerified: {
+        type: Boolean,
+        // default: false,
+        default: true,
+    },
+    isLiked: {
+        type: Boolean,
+        // default: false,
+        default: false,
+    },
+    photo: {
+        type: String, // Path to the photo file
+        required: true,
     },
     createdAt: {
         type: Date,
@@ -40,8 +54,8 @@ const blogSchema = new mongoose.Schema({
     }
 });
 
-// Automatically update the `updatedAt` field before each save operation
-blogSchema.pre('save', function(next) {
+// Automatically update `updatedAt` before saving
+blogSchema.pre('save', function (next) {
     this.updatedAt = Date.now();
     next();
 });
