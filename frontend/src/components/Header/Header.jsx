@@ -1,5 +1,4 @@
-// src/components/Header.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import styles from './Header.module.css';
@@ -9,7 +8,7 @@ import { AiOutlineUser, AiOutlineClose } from "react-icons/ai";
 const Header = ({ headerBg }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
-    const { auth, setAuth } = useAuth(); // Get auth state and setter from context
+    const { auth, setAuth } = useAuth();
 
     const toggleMenu = () => {
         setIsMenuOpen((prev) => !prev);
@@ -17,9 +16,18 @@ const Header = ({ headerBg }) => {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        setAuth(null); // Update auth state after logout
+        setAuth(null);
         navigate("/"); // Redirect to home after logout
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            setAuth({ token });
+        } else {
+            setAuth(null);
+        }
+    }, [setAuth]);
 
     return (
         <header style={{ backgroundColor: headerBg }}>
@@ -31,13 +39,14 @@ const Header = ({ headerBg }) => {
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/snippetslist">Snippets</NavLink>
 
-                    {auth ? ( // Check if the user is authenticated
+                    {auth ? (
                         <>
                             <NavLink to="/likedblogs">Liked Blogs</NavLink>
                             <NavLink to="/user/dashboard">
                                 User Profile
                                 <AiOutlineUser style={{ fontSize: "20px", marginLeft: "5px" }} />
                             </NavLink>
+                            <NavLink to="/createblog">Create Blog</NavLink> {/* Show Create Blog link for logged-in users */}
                             <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
                         </>
                     ) : (

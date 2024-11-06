@@ -2,11 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Authentication/Login';
 import RegisterForm from './components/Authentication/RegisterForm';
-import SnippetForm from './components/SnippetForm';
-import SnippetList from './components/SnippetList';
+import SnippetForm from './components/Snippets/SnippetForm';
+import SnippetList from './components/Snippets/SnippetList';
 import BlogForm from './components/AllBlogs/BlogForm';
 import BlogList from './components/AllBlogs/BlogList';
-import Home from './components/Home/Home';
+import Home from './pages/Home/Home';
 import AdminPanel from './components/admin/AdminPanel'; // Import the Admin Panel
 // import ProtectedRoute from './components/ProtectedRoute'; // Import the ProtectedRoute
 

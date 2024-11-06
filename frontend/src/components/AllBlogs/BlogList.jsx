@@ -12,7 +12,7 @@ const BlogList = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await axios.get(`${apiUrl}api/blogs`);
+                const response = await axios.get(`${apiUrl}/api/blogs`);
                 const blogsData = Array.isArray(response.data) ? response.data : [];
                 setBlogs(blogsData);
             } catch (err) {

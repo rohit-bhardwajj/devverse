@@ -8,20 +8,28 @@ const AdminPanel = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchUnverifiedBlogs = async () => {
-            const token = localStorage.getItem('token'); // Or wherever you're storing the token
-            try {
-                const response = await axios.get(`${apiUrl}api/blogs/admin`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setUnverifiedBlogs(response.data);
-            } catch (err) {
-                setError('Failed to fetch unverified blogs');
-                console.error(err);
+       // AdminPanel.jsx
+const fetchUnverifiedBlogs = async () => {
+    const token = localStorage.getItem('token'); // Or wherever you're storing the token
+    try {
+        const response = await axios.get(`${apiUrl}api/blogs/admin`, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        };
+        });
+        setUnverifiedBlogs(response.data);
+    } catch (err) {
+        if (err.response.status === 403) {
+            setError('You are not authorized as admin.');
+            // Optionally, redirect to homepage or handle accordingly
+            // e.g., use navigate from react-router
+        } else {
+            setError('Failed to fetch unverified blogs');
+            console.error(err);
+        }
+    }
+};
+
         
         fetchUnverifiedBlogs();
     }, []);

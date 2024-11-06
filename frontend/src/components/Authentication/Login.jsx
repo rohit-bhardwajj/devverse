@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Box, Container } from '@mui/material';
+import { Button, TextField, Typography, Box, Alert, Container } from '@mui/material';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -10,6 +11,9 @@ const Login = () => {
         password: '',
     });
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
+    const location = useLocation();
+    const redirectMessage = location.state?.message;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,7 +23,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}api/auth/login`, formData);
+            const response = await axios.post(`${import.meta.env.VITE_APP_API}api/auth/login`, formData);
             
             // Check if response.data exists and has success property
             if (response.data) {
@@ -48,6 +52,9 @@ const Login = () => {
                 <Typography component="h1" variant="h5">
                     Login
                 </Typography>
+                {redirectMessage && <Alert severity="info" sx={{ mb: 1.5 ,mt:3 ,borderRadius:2 }}>{redirectMessage}</Alert>}
+            {error && <Alert severity="error" sx={{ mb: 1.5 }}>{error}</Alert>}
+
                 <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                     <TextField
                         variant="outlined"

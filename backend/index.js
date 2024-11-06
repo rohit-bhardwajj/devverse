@@ -14,6 +14,7 @@ const app = express();
 // Middleware
 app.use(cors()); // Enables CORS for all routes
 app.use(express.json()); // Parse JSON requests
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)

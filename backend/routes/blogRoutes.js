@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const Blog = require('../models/Blog');
-const { protect } = require('../middleware/authMiddleware'); // Ensure protect is implemented to verify JWT
+const { protect,admin } = require('../middleware/authMiddleware'); // Ensure protect is implemented to verify JWT
 const router = express.Router();
 const path = require('path');
 const jwt = require('jsonwebtoken'); // Make sure you're using this correctly for signing or verifying tokens if needed
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Route to create a new blog post (with image upload)
-router.post('/', protect, upload.single('photo'), async (req, res) => {
+router.post('/createblog', protect, upload.single('photo'), async (req, res) => {
     const { title, content, tags } = req.body;
     const photo = req.file; // Access the uploaded file
 
@@ -94,15 +94,16 @@ router.delete('/:id', protect, async (req, res) => {
 });
 
 // Route to get all unverified blog posts (admin only)
-router.get('/admin', protect, async (req, res) => {
+router.get('/admin', async (req, res) => {
     try {
-        const unverifiedBlogs = await Blog.find({ isVerified: false });
-        res.json(unverifiedBlogs);
+        const blogs = await Blog.find({ verified: false }); // Adjust query as necessary
+        res.json(blogs);
     } catch (error) {
-        console.error('Error fetching unverified blogs:', error);
-        res.status(500).send('Server error');
+        console.error(error); // Log the error for debugging
+        res.status(500).json({ error: "Failed to fetch blog" });
     }
 });
+
 
 // Route to like a blog post
 router.post('/like/:id', protect, async (req, res) => {

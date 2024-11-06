@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import BlogList from '../AllBlogs/BlogList'; // Adjust the path as necessary
-import Header from '../Header/Header';
+import BlogList from '../../components/AllBlogs/BlogList'; // Adjust the path as necessary
+import Header from '../../components/Header/Header';
 import styles from "./Home.module.css"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";

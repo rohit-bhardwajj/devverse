@@ -1,53 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, TextField, Button, Box, Paper, Alert, Input } from '@mui/material';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const BlogForm = ({ userId }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [tags, setTags] = useState('');
-    const [photo, setPhoto] = useState(null); // New state for the image
+    const [photo, setPhoto] = useState(null);
     const [message, setMessage] = useState(null);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('Please log in to create a blog.');
+            setTimeout(() => {
+                navigate('/login', { state: { message: 'Please log in to create a blog post.' } });
+            }, 2000);
+        }
+    }, [navigate]);
 
     const handlePhotoChange = (e) => {
-        setPhoto(e.target.files[0]); // Set the selected image file
+        setPhoto(e.target.files[0])
+    
+        
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Prepare the form data
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-        formData.append('tags', JSON.stringify(tags.split(',').map(tag => tag.trim()))); // Ensure tags are sent as a JSON array
-        formData.append('author', userId); // Include the author if needed
-        if (photo) formData.append('photo', photo); // Attach the image if selected
+        formData.append('tags', JSON.stringify(tags.split(',').map(tag => tag.trim())));
+        formData.append('author', userId);
+        if (photo) formData.append('photo', photo);
 
-        const token = localStorage.getItem('token'); // Retrieve token
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('You are not authorized. Please log in again.');
+            return;
+        }
 
-        try {
-            const response = await axios.post('http://localhost:5000/api/blogs', formData, {
+        // Use toast.promise with the axios.post request
+        toast.promise(
+            axios.post('http://localhost:5000/api/blogs/createblog', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data' // Set content type for form data
+                    'Content-Type': 'multipart/form-data'
                 }
-            });
-            console.log('Blog submitted successfully:', response.data);
-            setMessage('Your blog has been submitted for review and will be published upon approval.');
-
-            // Clear the form fields after submission
-            setTitle('');
-            setContent('');
-            setTags('');
-            setPhoto(null);
-            setError(null); // Clear any previous errors
-        } catch (error) {
-            console.error('Error submitting blog:', error.response?.data || error.message);
-            setError(error.response?.data?.error || 'There was an issue submitting your blog. Please try again later.');
-            setMessage(null); // Clear any previous success message
-        }
+            }).then((response) => {
+                setMessage('Your blog has been submitted for review and will be published upon approval.');
+                setTitle('');
+                setContent('');
+                setTags('');
+                setPhoto(null);
+                setError(null);
+            }),
+            {
+                loading: 'Submitting your blog...',
+                success: 'Blog submitted successfully!',
+                error: 'Failed to submit the blog. Please try again.'
+            }
+        );
     };
 
     return (
@@ -90,12 +107,12 @@ const BlogForm = ({ userId }) => {
                         onChange={(e) => setTags(e.target.value)}
                     />
                     
-                    {/* Image upload field */}
                     <Box mt={2}>
                         <Input
                             type="file"
                             onChange={handlePhotoChange}
-                            inputProps={{ accept: 'image/*' }} // Accept only image files
+                            inputProps={{ accept: 'image/*' }}
+                            key={photo || ''}  // This key will force re-render when photo changes
                         />
                     </Box>
 
