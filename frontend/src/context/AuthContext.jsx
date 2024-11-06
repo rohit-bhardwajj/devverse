@@ -4,25 +4,38 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [auth, setAuth] = useState(null);
+    const [auth, setAuth] = useState({
+        token: null,
+        user: null,
+        isAuthenticated: false,
+    });
 
-    // Load user data from local storage when app starts
+    // Load token and set user data if token exists
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // Optionally, fetch user data using the token
-            // Here you can implement a function to get user info based on the token if needed
-            setAuth({ token }); // You can set more user info here if available
+            // Example: Add a call to fetch user info with token here, if needed
+            setAuth({ token, user: { /* user details if fetched */ }, isAuthenticated: true });
         }
     }, []);
 
+    // Login function
+    const login = (token, user) => {
+        localStorage.setItem('token', token);
+        setAuth({ token, user, isAuthenticated: true });
+    };
+
+    // Logout function
+    const logout = () => {
+        localStorage.removeItem('token');
+        setAuth({ token: null, user: null, isAuthenticated: false });
+    };
+
     return (
-        <AuthContext.Provider value={{ auth, setAuth }}>
+        <AuthContext.Provider value={{ auth, setAuth, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);

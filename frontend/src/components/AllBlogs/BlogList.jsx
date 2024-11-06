@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BlogCard from '../BlogCard/BlogCard';
 import './BlogList.css';
+
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const BlogList = () => {
@@ -29,12 +30,12 @@ const BlogList = () => {
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="blog-list-container">
-            <h2 className="blog-list-header">Blog List</h2>
+        <div className="blog-list-container max-w-4xl mx-auto my-6 px-4">
+            <h2 className="text-2xl font-semibold mb-4">Blog List</h2>
             {blogs.length === 0 ? (
-                <p className="no-blogs-message">No blogs available for display.</p>
+                <p className="text-gray-500">No blogs available for display.</p>
             ) : (
-                <div className="blog-grid">
+                <div className="space-y-4">
                     {blogs.map((blog) => (
                         <BlogCard
                             key={blog._id}

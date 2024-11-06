@@ -2,12 +2,15 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+// server/models/User.js
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    isAdmin: { type: Boolean, default: false }, 
+    isAdmin: { type: Boolean, default: false },
+    likedBlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }] // Array to track liked blogs
 });
+
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import styles from './BlogCard.module.css';
 import moment from 'moment';
 import { TbWriting } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import axios from 'axios';
+
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const BlogCard = ({ id, title, slug, description, category, createdAt, author = "Rohit Bhardwaj", likes = 0, photo }) => {
@@ -22,34 +22,46 @@ const BlogCard = ({ id, title, slug, description, category, createdAt, author = 
             console.error('Error liking the blog:', error);
         }
     };
-    
 
     return (
-        <div className={styles.card}>
-            <div className={styles.imageWrapper}>
-                <img 
-                    className={styles.image} 
-                    src={`${apiUrl}/${photo}`} // Ensure photo is included here
-                    alt={title} 
+        <div className="flex items-center space-x-4 border-b border-gray-200 py-4">
+            <div className="flex-shrink-0">
+                <img
+                    className="w-24 h-24 object-cover rounded-lg"
+                    src={`${apiUrl}${photo}`}
+                    alt={title}
                 />
             </div>
-            <div className={styles.cardContent}>
-                <div className={styles.title}>
-                    <h2>{title}</h2>
+            <div className="flex-1">
+                <div className="text-lg font-semibold text-gray-800">{title}</div>
+                <div className="text-sm text-gray-600">
+                    <span className="font-medium text-blue-500"># {category}</span>
                 </div>
-                <div className={styles.category}>
-                    <span># <span style={{ color: 'var(--secondary-color)' }}> {category} </span></span>
-                </div>
-                <div className={styles.description}>
+                <div className="text-sm text-gray-500">
                     {description?.slice(0, 100)}...
                 </div>
-                <div className={styles.time}>
-                    <span>Created {moment(createdAt).fromNow()}</span>
-                    <span><TbWriting /> {author}</span>
+                <div className="text-xs text-gray-400 flex justify-between items-center">
+                    <span>{moment(createdAt).fromNow()}</span>
+                    <span className="flex items-center">
+                        <TbWriting className="mr-1" /> {author}
+                    </span>
                 </div>
-                <Button variant="outlined" onClick={handleLike} color="primary">
-                    👍 {likeCount}
-                </Button>
+                <div className="flex justify-between items-center mt-2">
+                    <Button 
+                        variant="outlined" 
+                        onClick={handleLike} 
+                        color="primary"
+                        className="py-1 px-4 text-sm font-medium"
+                    >
+                        👍 {likeCount}
+                    </Button>
+                    <Link 
+                        to={`/blog/${slug}`} 
+                        className="text-blue-500 text-sm font-medium hover:underline"
+                    >
+                        Read more
+                    </Link>
+                </div>
             </div>
         </div>
     );

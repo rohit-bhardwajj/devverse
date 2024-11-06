@@ -4,6 +4,8 @@ import Header from '../../components/Header/Header';
 import styles from "./Home.module.css"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import '../../index.css'
+import {Typewriter} from 'react-simple-typewriter';
 
 const Home = () => {
      
@@ -20,12 +22,38 @@ const Home = () => {
 
     return (
         <div>
-            <Header/>
-            <h2>Welcome to DevVerse</h2>
-            {/* <div className={styles.heading}>
-                    <h1>QUESTIFY</h1>
-                    <h1>QUESTIFY</h1>
-                </div> */}
+            <Header />
+            
+            <div title={"Devverse"} >
+            <div className={styles.home}></div>
+
+            {/* Hero Section */}
+            <section className={styles.hero}>
+                <div className={styles.heading}>
+                    <h1>DEVVERSE</h1>
+                    <h1>DEVVERSE</h1>
+                </div>
+
+                <h2 className={styles.animateCharcter}>
+                    {/* Style will be inherited from the parent element */}
+                    <Typewriter
+                        words={['Uncover Knowledge', 'Discover Wisdom', 'Explore Learning', 'Grasp Insight', 'Learn and Grow']}
+                        cursor
+                        loop={10}
+                        cursorStyle='|'
+                        cursorBlinking='false'
+                        typeSpeed={100}
+                        deleteSpeed={60}
+                        delaySpeed={1000}
+                    />
+                </h2>
+                <div className={styles.container}>
+                    <p>Explore the world of knowledge and learning.</p>
+                    <nav to="/all-blogs" className={styles.heroButton}>Read Articles</nav>
+                </div>
+
+            </section>
+            </div >
                 
             <BlogList />
         </div>

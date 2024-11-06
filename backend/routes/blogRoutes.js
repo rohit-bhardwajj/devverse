@@ -1,10 +1,10 @@
 const express = require('express');
 const multer = require('multer');
 const Blog = require('../models/Blog');
-const { protect,admin } = require('../middleware/authMiddleware'); // Ensure protect is implemented to verify JWT
-const router = express.Router();
+const User = require('../models/User');
+const { protect, admin } = require('../middleware/authMiddleware'); // Ensure protect is implemented to verify JWT
 const path = require('path');
-const jwt = require('jsonwebtoken'); // Make sure you're using this correctly for signing or verifying tokens if needed
+const router = express.Router();
 
 // Set up multer storage configuration for photo uploads
 const storage = multer.diskStorage({
@@ -15,13 +15,12 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + '-' + file.originalname); // Add timestamp to file name
     }
 });
-
 const upload = multer({ storage });
 
 // Route to create a new blog post (with image upload)
 router.post('/createblog', protect, upload.single('photo'), async (req, res) => {
     const { title, content, tags } = req.body;
-    const photo = req.file; // Access the uploaded file
+    const photo = req.file;
 
     if (!title || !content) {
         return res.status(400).json({ error: 'Title and content are required.' });
@@ -34,7 +33,7 @@ router.post('/createblog', protect, upload.single('photo'), async (req, res) => 
             tags: tags ? tags.split(',').map(tag => tag.trim()) : [],
             author: req.user.id, // Assuming req.user is set by protect middleware
             isVerified: false,
-            photo: photo ? `/uploads/${photo.filename}` : null // Save relative path if photo exists
+            photo: photo ? `/uploads/${photo.filename}` : null
         });
         const savedBlog = await blog.save();
         res.status(201).json(savedBlog);
@@ -94,45 +93,52 @@ router.delete('/:id', protect, async (req, res) => {
 });
 
 // Route to get all unverified blog posts (admin only)
-router.get('/admin', async (req, res) => {
+router.get('/admin', protect, admin, async (req, res) => {
     try {
-        const blogs = await Blog.find({ verified: false }); // Adjust query as necessary
+        const blogs = await Blog.find({ isVerified: false });
         res.json(blogs);
     } catch (error) {
-        console.error(error); // Log the error for debugging
-        res.status(500).json({ error: "Failed to fetch blog" });
+        console.error(error);
+        res.status(500).json({ error: "Failed to fetch unverified blogs" });
     }
 });
 
-
-// Route to like a blog post
+// Route to like or unlike a blog post
 router.post('/like/:id', protect, async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id);
-        if (!blog) return res.status(404).json({ error: 'Blog not found' });
+        const user = await User.findById(req.user.id);
+        
+        if (!blog || !user) return res.status(404).json({ error: 'Blog or User not found' });
 
-        const userId = req.user.id;
-        const hasLiked = blog.likes.includes(userId);
+        const hasLiked = user.likedBlogs.includes(blog._id);
 
         if (hasLiked) {
             // Unlike the blog
-            blog.likes = blog.likes.filter(id => id !== userId);
+            user.likedBlogs = user.likedBlogs.filter(id => id.toString() !== blog._id.toString());
+            blog.likes -= 1;
         } else {
             // Like the blog
-            blog.likes.push(userId);
+            user.likedBlogs.push(blog._id);
+            blog.likes += 1;
         }
+
+        await user.save();
         await blog.save();
-        res.json({ likes: blog.likes.length });
+        res.json({ likes: blog.likes });
     } catch (error) {
         res.status(500).json({ error: 'Error updating likes' });
     }
 });
 
-// Route to get liked blogs for the user
+// Route to get all blogs liked by the user
 router.get('/liked-blogs', protect, async (req, res) => {
     try {
-        const blogs = await Blog.find({ likes: req.user.id, isVerified: true });
-        res.json(blogs);
+        const user = await User.findById(req.user.id).populate({
+            path: 'likedBlogs',
+            match: { isVerified: true }
+        });
+        res.json(user.likedBlogs);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch liked blogs' });
     }

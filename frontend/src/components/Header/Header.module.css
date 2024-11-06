@@ -1,4 +1,4 @@
-header {
+.header {
     position: sticky;
     top: 0;
     left: 0;
@@ -27,17 +27,16 @@ header {
 
 .logoImage {
     width: auto;
-    height: 50px;
+    height: 160px;
     margin-right: 1rem;
+    margin-top: 2rem;
 }
 
 .nav {
     display: flex;
-    gap: 1rem;
-
+    gap: 3rem;
     font-family: 'Montserrat', sans-serif;
 }
-
 
 .nav a {
     text-decoration: none;
@@ -54,16 +53,14 @@ header {
     display: none;
 }
 
-
+/* Mobile Menu Styles */
 @media screen and (max-width: 600px) {
     .nav {
         flex-direction: column;
         align-items: center;
         background-color: var(--header-background-color);
-
         position: absolute;
         top: 70px;
-   
         left: 0;
         width: 100%;
         margin: 0 0 0.8rem 0;
@@ -74,28 +71,15 @@ header {
 
     .showMenu {
         display: flex !important;
-
     }
 
     .hamburger {
         display: block;
         cursor: pointer;
     }
-
 }
 
 .mobileMenu {
     display: none;
     font-size: 2rem;
 }
-.logoutButton {
-    background: none;
-    border: none;
-    color: inherit;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0;
-    margin-left: 1rem;
-    text-decoration: underline;
-}
- 

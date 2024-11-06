@@ -9,10 +9,14 @@ import BlogList from './components/AllBlogs/BlogList';
 import Home from './pages/Home/Home';
 import AdminPanel from './components/admin/AdminPanel'; // Import the Admin Panel
 // import ProtectedRoute from './components/ProtectedRoute'; // Import the ProtectedRoute
+import './index.css'; // or wherever your tailwind styles are located
+import Header from './components/Header/Header';
+
 
 function App() {
-    return (
+    return (<>
         <Router>
+        
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<RegisterForm />} />
@@ -26,6 +30,7 @@ function App() {
 
             </Routes>
         </Router>
+        </>
     );
 }
 

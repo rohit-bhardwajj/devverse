@@ -1,68 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/authContext';
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './Header.module.css';
 import { HiMenu } from "react-icons/hi";
 import { AiOutlineUser, AiOutlineClose } from "react-icons/ai";
+import { useAuth } from '../../context/AuthContext';
 
+// Header.js
 const Header = ({ headerBg }) => {
+    const { auth, login, logout } = useAuth(); // Destructure new properties
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const navigate = useNavigate();
-    const { auth, setAuth } = useAuth();
 
     const toggleMenu = () => {
-        setIsMenuOpen((prev) => !prev);
+        setIsMenuOpen((prevIsMenuOpen) => !prevIsMenuOpen);
     };
-
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        setAuth(null);
-        navigate("/"); // Redirect to home after logout
-    };
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            setAuth({ token });
-        } else {
-            setAuth(null);
-        }
-    }, [setAuth]);
 
     return (
-        <header style={{ backgroundColor: headerBg }}>
+        <header style={{ backgroundColor: headerBg }} className={styles.header}>
             <div className={styles.headerContent}>
                 <div className={styles.logo}>
-                    <img src="/logoT.png" alt="DevVerse Logo" className={styles.logoImage} />
+                    <img src="/public/Devverse logo.png" alt="questify Logo" className={styles.logoImage} />
                 </div>
                 <nav className={`${styles.nav} ${isMenuOpen ? styles.showMenu : ''}`}>
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/snippetslist">Snippets</NavLink>
-
-                    {auth ? (
+                    <NavLink exact="true" activeclassname="active" to="/">Home</NavLink>
+                    <NavLink exact="true" activeclassname="active" to="/all-blogs">All Articles</NavLink>
+                    {!auth.isAuthenticated ? (
                         <>
-                            <NavLink to="/likedblogs">Liked Blogs</NavLink>
-                            <NavLink to="/user/dashboard">
-                                User Profile
-                                <AiOutlineUser style={{ fontSize: "20px", marginLeft: "5px" }} />
-                            </NavLink>
-                            <NavLink to="/createblog">Create Blog</NavLink> {/* Show Create Blog link for logged-in users */}
-                            <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
+                            <NavLink exact="true" activeclassname="active" to="/register">Register</NavLink>
+                            <NavLink exact="true" activeclassname="active" to="/login">Login</NavLink>
                         </>
                     ) : (
                         <>
-                            <NavLink to="/register">Register</NavLink>
-                            <NavLink to="/login">Login</NavLink>
+                            <NavLink exact="true" activeclassname="active" to="/user/liked-articles">Liked Articles</NavLink>
+                            <NavLink exact="true" activeclassname="active" to="/user/dashboard">
+                                {auth.user?.name} <AiOutlineUser style={{ fontSize: "20px" }} />
+                            </NavLink>
+                            <button onClick={logout}>Logout</button>
                         </>
                     )}
                 </nav>
                 <div className={styles.hamburger} onClick={toggleMenu}>
-                    <HiMenu className={`${styles.mobileMenu} ${!isMenuOpen ? styles.showMenu : ''}`} />
-                    <AiOutlineClose className={`${styles.mobileMenu} ${isMenuOpen ? styles.showMenu : ''}`} />
+                    {isMenuOpen ? <AiOutlineClose /> : <HiMenu />}
                 </div>
             </div>
         </header>
     );
 };
-
 export default Header;
