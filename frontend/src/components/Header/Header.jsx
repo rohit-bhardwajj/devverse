@@ -18,11 +18,11 @@ const Header = ({ headerBg }) => {
         <header style={{ backgroundColor: headerBg }} className={styles.header}>
             <div className={styles.headerContent}>
                 <div className={styles.logo}>
-                    <img src="/public/Devverse logo.png" alt="questify Logo" className={styles.logoImage} />
+                    <img src="/Devverse logo.png" alt="Devverse Logo" className={styles.logoImage} />
                 </div>
                 <nav className={`${styles.nav} ${isMenuOpen ? styles.showMenu : ''}`}>
-                    <NavLink exact="true" activeclassname="active" to="/">Home</NavLink>
-                    <NavLink exact="true" activeclassname="active" to="/all-blogs">All Articles</NavLink>
+                    <NavLink exact="true"  activeclassname="active" to="/">Home</NavLink>
+                    <NavLink exact="true"  activeclassname="active" to="/all-blogs">All Articles</NavLink>
                     {!auth.isAuthenticated ? (
                         <>
                             <NavLink exact="true" activeclassname="active" to="/register">Register</NavLink>
@@ -34,7 +34,7 @@ const Header = ({ headerBg }) => {
                             <NavLink exact="true" activeclassname="active" to="/user/dashboard">
                                 {auth.user?.name} <AiOutlineUser style={{ fontSize: "20px" }} />
                             </NavLink>
-                            <button onClick={logout}>Logout</button>
+                            {/* <button onClick={logout}>Logout</button> */}
                         </>
                     )}
                 </nav>

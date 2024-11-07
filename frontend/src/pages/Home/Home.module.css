@@ -165,12 +165,16 @@
 
 .heading h1:nth-child(1) {
     /* color: transparent; */
-    color: var(--primary-color);
+    /* color: var(--primary-color); */
+    color:color-mix(in hsl shorter hue, orange 50%, pink 46%);
+  
     /* -webkit-text-stroke: 2px #03a9f4; */
 }
 
 .heading h1:nth-child(2) {
-    color: var(--secondary-color);
+    /* color: var(--secondary-color); */
+    /* color: var(--primary-color); */
+    color:color-mix(in hsl shorter hue, rgb(0, 255, 234) 60%, pink 4%);
     animation: animate 4s ease-in-out infinite;
 }
 

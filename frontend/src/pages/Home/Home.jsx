@@ -22,16 +22,16 @@ const Home = () => {
 
     return (
         <div>
-            <Header />
+            <Header headerBg={headerBgColor} />
             
-            <div title={"Devverse"} >
+            <div title={""} >
             <div className={styles.home}></div>
 
             {/* Hero Section */}
             <section className={styles.hero}>
                 <div className={styles.heading}>
-                    <h1>DEVVERSE</h1>
-                    <h1>DEVVERSE</h1>
+                    <h1 className=' font-extrabold'>DEVVERSE</h1>
+                    <h1 className=' font-extrabold'>DEVVERSE</h1>
                 </div>
 
                 <h2 className={styles.animateCharcter}>

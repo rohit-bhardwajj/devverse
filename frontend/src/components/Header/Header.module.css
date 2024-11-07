@@ -35,6 +35,8 @@
 .nav {
     display: flex;
     gap: 3rem;
+    /* padding-top: 0; */
+    margin-left: 3rem;
     font-family: 'Montserrat', sans-serif;
 }
 
