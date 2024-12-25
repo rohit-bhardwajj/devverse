@@ -12,6 +12,10 @@ import AdminPanel from './components/admin/AdminPanel'; // Import the Admin Pane
 import './index.css'; // or wherever your tailwind styles are located
 import Header from './components/Header/Header';
 
+import LikedBlogs from './components/AllBlogs/LikedBlogs';
+
+
+
 
 function App() {
     return (<>
@@ -26,7 +30,7 @@ function App() {
                 <Route path="/createblog" element={<BlogForm />} />
                 <Route path="/allblogs" element={<BlogList />} />
                 <Route path="/admin" element={<AdminPanel />} />
-                
+                <Route path="/user/liked-blogs" element={<LikedBlogs />} />
 
             </Routes>
         </Router>

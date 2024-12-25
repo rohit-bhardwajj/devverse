@@ -33,7 +33,7 @@ const blogSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         // default: false,
-        default: true,
+        default: false,
     },
     isLiked: {
         type: Boolean,

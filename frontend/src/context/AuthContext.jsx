@@ -22,7 +22,17 @@ export const AuthProvider = ({ children }) => {
     // Login function
     const login = (token, user) => {
         localStorage.setItem('token', token);
-        setAuth({ token, user, isAuthenticated: true });
+        // setAuth({ token, user, isAuthenticated: true });
+        setAuth((prev) => ({
+            ...prev,
+            token: token,
+            user: user,
+            isAuthenticated: true
+        }));
+    
+        window.history.replaceState(null, '', window.location.pathname);
+        window.location.reload();
+
     };
 
     // Logout function
@@ -32,9 +42,10 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ auth, setAuth, login, logout }}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider key={auth.isAuthenticated} value={{ auth, setAuth, login, logout }}>
+    {children}
+</AuthContext.Provider>
+
     );
 };
 

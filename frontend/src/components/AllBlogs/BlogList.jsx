@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BlogCard from '../BlogCard/BlogCard';
 import './BlogList.css';
+import Loader from '../loader';
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/';
 const BlogList = () => {
+    
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,7 +14,7 @@ const BlogList = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await axios.get(`${apiUrl}/api/blogs`);
+                const response = await axios.get(`${apiUrl}api/blogs`);
                 const blogsData = Array.isArray(response.data) ? response.data : [];
                 setBlogs(blogsData);
             } catch (err) {
@@ -26,7 +27,7 @@ const BlogList = () => {
         fetchBlogs();
     }, []);
 
-    if (loading) return <div className="loading">Loading...</div>;
+    if (loading) return <Loader/>;
     if (error) return <div className="error">{error}</div>;
 
     return (

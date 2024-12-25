@@ -206,6 +206,11 @@
     }
 }
 
+.carouselSection {
+    padding: 2rem 0;
+    background-color: #f9f9f9; /* Optional background for contrast */
+}
+
 .animateCharcter {
     text-transform: uppercase;
     background-image: linear-gradient(-225deg, var(--primary-color) 0%, var(--accent-color) 29%, var(--secondary-color) 67%, var(--background-color) 100%);

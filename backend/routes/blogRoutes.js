@@ -111,15 +111,19 @@ router.post('/like/:id', protect, async (req, res) => {
         
         if (!blog || !user) return res.status(404).json({ error: 'Blog or User not found' });
 
-        const hasLiked = user.likedBlogs.includes(blog._id);
-
+        // const hasLiked = user.likedBlogs.includes(blog._id);
+        const hasLiked = user.likedBlogs.includes(blog.id);
+        
         if (hasLiked) {
             // Unlike the blog
             user.likedBlogs = user.likedBlogs.filter(id => id.toString() !== blog._id.toString());
-            blog.likes -= 1;
+            if(blog.likes>0){
+                blog.likes -= 1;
+            }
         } else {
             // Like the blog
-            user.likedBlogs.push(blog._id);
+            // user.likedBlogs.push(blog._id);
+            user.likedBlogs.push(blog.id);
             blog.likes += 1;
         }
 
@@ -134,14 +138,27 @@ router.post('/like/:id', protect, async (req, res) => {
 // Route to get all blogs liked by the user
 router.get('/liked-blogs', protect, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).populate({
-            path: 'likedBlogs',
-            match: { isVerified: true }
-        });
-        res.json(user.likedBlogs);
+        // Fetch the user
+        const user = await User.findById(req.user.id).populate('likedBlogs');
+        if (!user) {
+            console.error('User not found');
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the likedBlogs array is empty
+        if (!user.likedBlogs || user.likedBlogs.length === 0) {
+            console.log('No liked blogs');
+            return res.status(404).json({ message: 'No liked blogs found' });
+        }
+
+        // Send the liked blogs
+        res.status(200).json(user.likedBlogs);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch liked blogs' });
+        console.error('Server Error:', error.message);  // Log the full error message
+        res.status(500).json({ message: 'Failed to fetch liked blogs', error: error.message });
     }
 });
+
+
 
 module.exports = router;
