@@ -3,7 +3,7 @@ import axios from 'axios';
 import BlogCard from '../BlogCard/BlogCard'; // Assuming you already have a BlogCard component
 import { toast } from 'react-hot-toast';
 
-const apiUrl = 'http://localhost:5000/';
+// const apiUrl = 'http://localhost:5000/';
 
 const LikedBlogs = () => {
     const [likedBlogs, setLikedBlogs] = useState([]);
@@ -18,7 +18,7 @@ const LikedBlogs = () => {
                 return;
             }
             try {
-                const response = await axios.get(`${apiUrl}api/blogs/liked-blogs`, {
+                const response = await axios.get('/api/blogs/liked-blogs', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

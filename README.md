@@ -1,6 +1,6 @@
 # DevVerse
 
-DevVerse is a developer-focused platform that allows users to share and explore code snippets, tutorials, and technical articles. Built with MongoDB and React, it provides a collaborative environment for developers to learn and grow.
+DevVerse is a developer-focused platform that allows users to share and explore code snippets, tutorials, and technical articles. Built with MongoDB and React js, it provides a collaborative environment for developers to learn and grow.
 
 ## Table of Contents
 

@@ -122,8 +122,8 @@ router.post('/like/:id', protect, async (req, res) => {
             }
         } else {
             // Like the blog
-            // user.likedBlogs.push(blog._id);
-            user.likedBlogs.push(blog.id);
+            user.likedBlogs.push(blog._id);
+            // user.likedBlogs.push(blog.id);
             blog.likes += 1;
         }
 
@@ -139,7 +139,7 @@ router.post('/like/:id', protect, async (req, res) => {
 router.get('/liked-blogs', protect, async (req, res) => {
     try {
         // Fetch the user
-        const user = await User.findById(req.user.id).populate('likedBlogs');
+        const user = await User.findById(req.user._id).populate('likedBlogs');
         if (!user) {
             console.error('User not found');
             return res.status(404).json({ message: 'User not found' });

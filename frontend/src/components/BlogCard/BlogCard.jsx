@@ -20,7 +20,7 @@ const BlogCard = ({ id, title, slug, description, category, createdAt, author, i
             const token = localStorage.getItem('token');
             if (!token) return;
             try {
-                const response = await axios.get(`${apiUrl}api/blogs/liked-blogs`, {
+                const response = await axios.get('/api/blogs/liked-blogs', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const likedBlogs = response.data;
@@ -42,7 +42,7 @@ const BlogCard = ({ id, title, slug, description, category, createdAt, author, i
         }
 
         try {
-            const response = await axios.post(`${apiUrl}api/blogs/like/${id}`, {}, {
+            const response = await axios.post('/api/blogs/like/${id}', {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

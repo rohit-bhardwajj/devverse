@@ -23,7 +23,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${import.meta.env.VITE_APP_API}api/auth/login`, formData);
+            const response = await axios.post('/api/auth/login', formData);
             
             // Check if response.data exists and has success property
             if (response.data) {

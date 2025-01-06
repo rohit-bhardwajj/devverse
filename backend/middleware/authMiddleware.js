@@ -1,40 +1,33 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import asyncHandler from '../utils/asyncHandler.js'
+import { ApiError } from '../utils/ApiError.js'
+import jwt from 'jsonwebtoken'
+import { User } from '../models/User.js'
 
-const protect = async (req, res, next) => {
-    let token;
+export const verifyJWT = asyncHandler(async (req, _, next) => {
 
-    // Check if authorization header exists and starts with 'Bearer'
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        try {
-            token = req.headers.authorization.split(' ')[1]; // Extract the token
-            const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
+    try {
+        const token = req.cookies?.accessToken || req.header(
+            "Authorization")?.replace("Bearer ", "")
 
-            // Attempt to find the user by ID
-            req.user = await User.findById(decoded.id).select('-password'); // Exclude password from user object
-
-            // Check if user was found
-            if (!req.user) {
-                return res.status(401).json({ error: 'Not authorized, user not found' });
-            }
-
-            next(); // Proceed to the next middleware or route handler
-        } catch (error) {
-            console.error('Token verification error:', error); // Log the error for debugging
-            res.status(401).json({ error: 'Not authorized, token failed' }); // Handle token failure
+        if (!token) {
+            throw new ApiError(401, "Unauthorized request")
         }
-    } else {
-        res.status(401).json({ error: 'Not authorized, no token' }); // No token provided
-    }
-};
 
-// Middleware to check if user is an admin
-const admin = (req, res, next) => {
-    if (req.user && req.user.isAdmin) {
-        next(); // User is admin, proceed
-    } else {
-        res.status(403).json({ error: 'You are not authorized as admin' });
-    }
-};
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
 
-module.exports = { protect, admin };
+        const user = await User.findById(decodedToken?._id).select(
+            "-password -refreshToken"
+        )
+
+        if (!user) {
+            throw new ApiError(401, "Invalid Access Token")
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+
+        throw new ApiError(401, error?.message || "Invalid Access Token")
+    }
+
+})

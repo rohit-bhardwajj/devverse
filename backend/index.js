@@ -1,40 +1,31 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const authRoutes = require('./routes/authRoutes'); // Import the auth routes
-const snippetRoutes = require('./routes/snippetRoutes');
-const blogRoutes = require('./routes/blogRoutes'); // Import blog routes
-const path = require('path'); // Add this line
+import express from 'express'
+import 'dotenv/config'
+import {connectdb} from './db/index.js'
+import {app} from './app.js'
 
-dotenv.config(); // Load environment variables from .env file
-
-const app = express();
-
-// Middleware
-app.use(cors()); // Enables CORS for all routes
-app.use(express.json()); // Parse JSON requests
-app.use(express.urlencoded({ extended: true }));
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.error('MongoDB connection error:', err));
-
-// Use authentication routes
-app.use('/api/auth', authRoutes); // Mount the auth routes
-app.use('/api/snippets', snippetRoutes); // Mount the Snippet route
-app.use('/api/blogs', blogRoutes); // Mount the Blog route
-
-// Your routes and other logic here
-app.get('/', (req, res) => {
-    res.send('Welcome to the DevVerse Home!');
-});
+//Mongodb connection can be done using IIFEs
+// (async()=>{
+//     try{
+//         mongoose.connect(`${process.env.MONGO_URI}`)
+//         .then(()=>console.log("Mongodb connected!")
+//     )
+//         .catch(err =>console.error('Error:',err))
+//     }
+//     catch(error){
+//         console.error("Error:",error);
+//     }
+// })()
+connectdb().
+then(
+    app.listen(process.env.PORT,()=>{
+        console.log(`Server is running on Port:${process.env.PORT}`);
+    })
+)
+.catch((err)=>{
+    console.log("Mongodb connection error !!",err);
+})
 
 // Static path for image uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 
-const PORT = process.env.PORT || 3000; // Default to 3000 if PORT is not set
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});

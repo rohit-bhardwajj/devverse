@@ -46,7 +46,7 @@ const BlogForm = ({ userId }) => {
 
         // Use toast.promise with the axios.post request
         toast.promise(
-            axios.post('http://localhost:5000/api/blogs/createblog', formData, {
+            axios.post('/api/blogs/createblog', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'

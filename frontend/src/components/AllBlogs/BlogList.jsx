@@ -4,7 +4,7 @@ import BlogCard from '../BlogCard/BlogCard';
 import './BlogList.css';
 import Loader from '../loader';
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/';
+// const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/';
 const BlogList = () => {
     
     const [blogs, setBlogs] = useState([]);
@@ -14,7 +14,7 @@ const BlogList = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await axios.get(`${apiUrl}api/blogs`);
+                const response = await axios.get('/api/blogs');
                 const blogsData = Array.isArray(response.data) ? response.data : [];
                 setBlogs(blogsData);
             } catch (err) {

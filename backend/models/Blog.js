@@ -43,22 +43,15 @@ const blogSchema = new mongoose.Schema({
     photo: {
         type: String, // Path to the photo file
         required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now,
     }
-});
+},{timestamps:true}
+);
 
-// Automatically update `updatedAt` before saving
-blogSchema.pre('save', function (next) {
-    this.updatedAt = Date.now();
-    next();
-});
+// Automatically update `updatedAt` before saving but we used timestamps that does the work for us
+// blogSchema.pre('save', function (next) {
+//     this.updatedAt = Date.now();
+//     next();
+// });
 
 const Blog = mongoose.model('Blog', blogSchema);
 module.exports = Blog;

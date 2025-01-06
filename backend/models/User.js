@@ -1,15 +1,20 @@
-// server/models/User.js
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
-// server/models/User.js
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
+    fullName:{type:String,required:true},
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: [true] },
     isAdmin: { type: Boolean, default: false },
     likedBlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }] // Array to track liked blogs
-});
+    ,
+    refreshToken:{
+       type:String,
+    }
+},{timestamps:true}
+);
 
 
 // Hash password before saving
@@ -25,4 +30,31 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.methods.generateRefreshToken = function(){
+
+    return  jwt.sign(
+        { _id: this._id },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+        }
+    )
+}
+userSchema.methods.generateAccessToken = function(){
+
+  return  jwt.sign(
+        {
+            _id:this._id,
+            username:this.username,
+            fullName : this.fullName,
+            email:this.email
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn:process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
+
+
+export const User = new mongoose.model("User",userSchema);
