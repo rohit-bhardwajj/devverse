@@ -84,7 +84,8 @@ const loginUser = asyncHandler(async (req, res) => {
         httpOnly: true,
         secure: true
     }
-
+    console.log("\nBelow is req object");
+    console.log(req);
     return res
     .status(200)
     .cookie("accessToken",accessToken,options)
@@ -97,7 +98,18 @@ const loginUser = asyncHandler(async (req, res) => {
     )
 })
 const logoutUser = asyncHandler(async (req, res) => {
-    
+
+    await User.findByIdAndUpdate(req.user._id,
+        {
+            $unset:{
+                refreshToken:1
+                //this removes the field from document
+            }
+        }
+    )
+
+
+
     const options = {
         httpOnly:true,
         secure:true
