@@ -1,0 +1,92 @@
+header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    height: 70px;
+    color: var(--primary-color);
+    background-color: var(--header-background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    width: 1200px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logoImage {
+    width: auto;
+    height: 110px;
+    padding-top: 10px;
+    margin-right: 1rem;
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+.nav a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.nav a:hover {
+    color: var(--accent-color);
+}
+
+.hamburger {
+    display: none;
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 600px) {
+    .nav {
+        flex-direction: column;
+        align-items: center;
+        background-color: var(--header-background-color);
+
+        position: absolute;
+        top: 70px;
+        /* Adjust this value to position the menu below the header */
+        left: 0;
+        width: 100%;
+        margin: 0 0 0.8rem 0;
+        padding: 1rem;
+        transition: ease-in-out;
+        /* Hide the menu by default */
+        display: none;
+    }
+
+    .showMenu {
+        display: flex !important;
+        /* Show the menu when the showMenu class is applied */
+    }
+
+    .hamburger {
+        display: block;
+        cursor: pointer;
+    }
+
+}
+
+.mobileMenu {
+    display: none;
+    font-size: 2rem;
+}

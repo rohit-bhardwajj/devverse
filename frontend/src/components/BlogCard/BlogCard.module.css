@@ -1,92 +1,156 @@
-/* .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 5px;
-    background-color: var(--background-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* padding: 20px; */
+  border-radius: 5px;
+  /* border: 0.5px solid var(--primary-color); */
+  background-color: var(--background-color);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+  width: 100%;
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: 0 3px 16px 0 rgba(0, 0, 0, 0.11);
+}
+
+.card:hover h2 {
+  color: var(--accent-color);
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 200px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  max-height: 200px;
+  border-radius: 5px 5px 0 0;
+}
+
+.cardContent {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+}
+
+.description {
+  font-size: 0.9rem;
+  padding: 10px 0;
+  color: var(--accent-color);
+}
+
+.time {
+  color: var(--text-color);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.time span {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.title {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  white-space: normal;
+  /* display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; */
+  overflow: hidden;
+}
+
+.category {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 10px;
+}
+
+.title h2 {
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  color: var(--primary-color);
+  margin-bottom: 0 !important;
+  font-size: 1.2rem !important;
+  word-break: break-word;
+}
+
+.category span {
+  font-family: "Open Sans", sans-serif;
+  text-transform: lowercase;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+}
+
+.time .edit {
+  font-size: 2rem;
+  color: var(--text-color);
+}
+
+.time .edit:hover {
+  font-size: 2rem;
+  color: var(--secondary-color);
+}
+
+.time .delete {
+  font-size: 2rem;
+  color: var(--text-color);
+}
+
+.time .delete:hover {
+  font-size: 2rem;
+  color: red;
+}
+
+/* Media query for larger screens */
+@media screen and (min-width: 768px) {
+  .card {
+    flex-direction: row;
     width: 100%;
-    cursor: pointer;
-    transition: box-shadow 0.2s ease;
+    /* height: 150px; */
   }
-  
-  .card:hover {
-    box-shadow: 0 3px 16px rgba(0, 0, 0, 0.11);
-  }
-  
-  .imageWrapper {
-    width: 100%;
-    height: 200px;
-  }
-  
-  .image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 5px 5px 0 0;
-  }
-  
+
   .cardContent {
+    align-items: flex-start;
+    margin-left: 20px;
+    /* height: 150px; */
     padding: 10px;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
   }
-  
-  .title h2 {
-    font-size: 1.2rem;
-    color: var(--primary-color);
-    margin: 0;
-    word-break: break-word;
+  .imageWrapper {
+    width: 350px;
   }
-  
-  .category span {
-    font-size: 0.9rem;
-    color: var(--primary-color);
-  }
-  
-  .description {
-    font-size: 0.9rem;
-    color: var(--accent-color);
-  }
-  
+
   .time {
-    font-size: 0.8rem;
-    color: var(--text-color);
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    gap: 10px;
+    padding: 10px;
   }
-  
-  .time span {
-    display: flex;
-    align-items: center;
+
+  .image {
+    margin-right: 20px;
+    width: 350px;
+    height: 200px;
+    border-radius: 5px 0 0 5px;
   }
-  
-  @media (min-width: 768px) {
-    .card {
-      flex-direction: row;
-      width: 100%;
-    }
-  
-    .imageWrapper {
-      width: 350px;
-    }
-  
-    .image {
-      height: 200px;
-      border-radius: 5px 0 0 5px;
-    }
-  
-    .cardContent {
-      padding-left: 20px;
-    }
-  
-    .title h2 {
-      font-size: 1.5rem;
-    }
+
+  .title h2 {
+    font-size: 1.5rem !important;
   }
-   */
+}

@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans&display=swap"); */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 15px;
+}
+
+main {
+  background-color: var(--background-color);
+  /* padding-top: 70px; */
+}
+
+/* padding-top: 70px; */
+/* Match the height of the header */
+
+:root {
+  --primary-color: #09416a;
+  --accent-color: #1da2a1;
+  --secondary-color: #e7a529;
+  --background-color: #f5f5f5;
+  --text-color: #6a6d6e;
+  --header-background-color: #f0f0f0;
+  --loading-bar-gradient: linear-gradient(
+    to right,
+    var(--primary-color),
+    var(--accent-color),
+    var(--secondary-color)
+  );
+}
+
+/* .TopLoadingBar {
+  background-image: var(--loading-bar-gradient);
+  transition: width 0.3s ease;
+  z-index: 9999;
+} */
+.TopLoadingBar {
+  background-color: var(--accent-color);
+  /* You can use your --accent-color here */
+  height: 5px;
+  border-radius: 5px;
+  /* Add the desired border radius value */
+  transition: width 0.3s ease;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar {
+  width: 0.375rem;
+  height: 0.375rem;
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track:active {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1890ff;
+  border-radius: 0.5rem;
+  border-style: none;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track:hover {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 0.5rem;
+  border-style: none;
+}
+
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Montserrat", sans-serif;
+}
+
+p {
+  font-family: "Open Sans", sans-serif;
+}
+
+a {
+  font-family: "Open Sans", sans-serif;
+  text-decoration: none;
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+.active {
+  color: var(--secondary-color) !important;
+}
+
+button:hover {
+  background-color: var(--accent-color);
+  /* background-color: var(--secondary-color); */
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+}
+
+label {
+  display: block;
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  background-color: var(--background-color);
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 4px;
+  background-color: var(--background-color);
+  resize: vertical;
+}
+
+.Toastify {
+  font-family: "Montserrat", sans-serif;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+.Toastify__close-button {
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  line-height: 18px;
+  background-color: transparent;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.Toastify__close-button:hover {
+  color: red;
+  background-color: transparent;
+}
+
+.styles-module_blinkingCursor__yugAC {
+  display: inline-block;
+  background-color: gray;
+  width: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 5px;
+  background-color: var(--background-color);
+  width: 100%;
+  cursor: pointer;
+}
+
+html {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  touch-action: auto;
+}
+
+.react-multiple-carousel__arrow {
+  max-width: 43px;
+}
+
+.react-multi-carousel-item {
+  padding: 20px;
+}

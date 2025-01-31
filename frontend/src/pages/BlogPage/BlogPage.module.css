@@ -1,0 +1,86 @@
+/* BlogDetailPage.module.css */
+
+.blogDetailContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+
+  transition: all 0.3s ease;
+}
+
+.blogTitle {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.blogImage {
+  width: 100%;
+  max-height: 400px;
+  margin-bottom: 20px;
+}
+
+.others {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.blogInfo {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.blogLike {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.likeButton {
+  padding: 0;
+  background-color: transparent;
+  color: red;
+  opacity: 0.8;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.likeButton:hover {
+  opacity: 1;
+}
+
+.commentButton {
+  padding: 0;
+  background-color: transparent;
+}
+
+.commentButton:hover {
+  background-color: transparent;
+}
+
+.likeButton:hover {
+  background-color: transparent;
+}
+
+.blogAuthor {
+  color: var(--secondary-color);
+}
+
+.blogDate {
+  color: var(--accent-color);
+  text-transform: capitalize;
+}
+
+.relatedBlogslider {
+  max-width: 1200px;
+  margin: auto;
+  padding: 10px;
+  border-top: 1px solid #eaeaea;
+  border-radius: 2px;
+}

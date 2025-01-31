@@ -3,16 +3,16 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    fullName:{type:String,required:true},
+    // username: { type: String, required: true, unique: true },
+    name:{type:String,required:true,trim:true},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: [true] },
-    isAdmin: { type: Boolean, default: false },
+    role: { type: String, default: "user" },
     likedBlogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Blog' }] // Array to track liked blogs
     ,
-    refreshToken:{
-       type:String,
-    }
+    // refreshToken:{
+    //    type:String,
+    // }
 },{timestamps:true}
 );
 
@@ -30,31 +30,31 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.methods.generateRefreshToken = function(){
+// userSchema.methods.generateRefreshToken = function(){
 
-    return  jwt.sign(
-        { _id: this._id },
-        process.env.REFRESH_TOKEN_SECRET,
-        {
-            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
-        }
-    )
-}
-userSchema.methods.generateAccessToken = function(){
+//     return  jwt.sign(
+//         { _id: this._id },
+//         process.env.REFRESH_TOKEN_SECRET,
+//         {
+//             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+//         }
+//     )
+// }
+// userSchema.methods.generateAccessToken = function(){
 
-  return  jwt.sign(
-        {
-            _id:this._id,
-            username:this.username,
-            fullName : this.fullName,
-            email:this.email
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-            expiresIn:process.env.ACCESS_TOKEN_EXPIRY
-        }
-    )
-}
+//   return  jwt.sign(
+//         {
+//             _id:this._id,
+//             username:this.username,
+//             fullName : this.fullName,
+//             email:this.email
+//         },
+//         process.env.ACCESS_TOKEN_SECRET,
+//         {
+//             expiresIn:process.env.ACCESS_TOKEN_EXPIRY
+//         }
+//     )
+// }
 
 
 export const User = new mongoose.model("User",userSchema);

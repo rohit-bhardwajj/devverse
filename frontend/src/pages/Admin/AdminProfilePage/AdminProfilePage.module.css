@@ -1,0 +1,21 @@
+.container {
+    min-height: 75vh;
+    /* background-color: red; */
+    display: flex;
+    margin: 30px 10px;
+}
+
+.menu {
+    width: 30%;
+    height: 100%;
+    /* background-color: black; */
+}
+
+.menuLink {
+    color: white;
+}
+
+.content {
+    width: 70%;
+    height: 100%;
+}

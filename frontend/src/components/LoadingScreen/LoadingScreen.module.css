@@ -1,0 +1,30 @@
+.container {
+    width: 100%;
+    height: 100%;
+    /* background-color: var(--background-color); */
+    /* background-color: white; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.items {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    width: 100%;
+
+}
+
+.container img {
+    border-bottom: 10px solid #09426a67;
+}
+
+.container h1 {
+    margin: 10px 0;
+    color: #09426ac8;
+    text-transform: lowercase;
+}

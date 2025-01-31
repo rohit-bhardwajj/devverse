@@ -1,0 +1,27 @@
+.container {
+    min-height: 75vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 10px;
+}
+
+.container form button {
+    margin: 10px 0;
+}
+
+.menu {
+    width: 30%;
+    height: 100%;
+    /* background-color: black; */
+}
+
+.menuLink {
+    color: white;
+}
+
+.content {
+    width: 70%;
+    height: 100%;
+}

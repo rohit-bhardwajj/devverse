@@ -1,33 +1,50 @@
-import asyncHandler from '../utils/asyncHandler.js'
-import { ApiError } from '../utils/ApiError.js'
-import jwt from 'jsonwebtoken'
-import { User } from '../models/user.model.js'
+import jwt from "jsonwebtoken";
+import {User} from "../models/user.model.js";
+import { ApiError } from "../utils/ApiError.js";
 
-export const verifyJWT = asyncHandler(async (req, _, next) => {
-
+// Middleware to protect routes using JSON Web Token (JWT)
+export const verifyJWT = async (req, res, next) => {
     try {
-        const token = req.cookies?.accessToken || req.header(
-            "Authorization")?.replace("Bearer ", "")
+        // console.log(req.headers)
+        // Verify the token from the 'Authorization' header using the JWT_SECRET
+        const decodedToken = jwt.verify(req.headers.authorization, process.env.JWT_SECRET);
 
-        if (!token) {
-            throw new ApiError(401, "Unauthorized request")
-        }
+        // Set the decoded user data to the request object for further use
+        req.user = decodedToken;
+        // console.log(req.user)
 
-        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-
-        const user = await User.findById(decodedToken?._id).select(
-            "-password -refreshToken"
-        )
-
-        if (!user) {
-            throw new ApiError(401, "Invalid Access Token")
-        }
-
-        req.user = user;
+        // Move to the next middleware or route handler
         next();
     } catch (error) {
-
-        throw new ApiError(401, error?.message || "Invalid Access Token")
+        // If the token is invalid or expired, return an unauthorized error
+        throw new ApiError(403,"Error in user authentication")
     }
+};
 
-})
+
+
+// Middleware to check if the user is an admin
+export const isAdmin = async (req, res, next) => {
+    try {
+
+        const user = await User.findById(req.user._id);
+
+        // Check if the user's role is 'admin', if yes, move to the next middleware or route handler
+        if (user.role === "admin") {
+            next();
+        } else {
+            // If the user is not an admin, return an unauthorized access message
+            return res.status(403).send({
+                success: false,
+                message: "Unauthorized Access: Admin access required.",
+            });
+        }
+    } catch (error) {
+        // If an error occurs during the process, return an unauthorized error
+        res.status(401).send({
+            success: false,
+            error,
+            message: "Error in isAdmin middleware",
+        });
+    }
+};

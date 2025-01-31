@@ -14,10 +14,11 @@ app.use(express.urlencoded({ extended: true }));
 //routes import
 import userRouter from './routes/user.routes.js'
 import blogRouter from './routes/blog.routes.js'
-
+import categoryRouter from './routes/category.routes.js'
 app.use('/api/v1/users', userRouter); // Mount the auth routes
 // app.use('/api/v1/snippets', snippetRoutes); // Mount the Snippet route
 app.use('/api/v1/blogs', blogRouter); // Mount the Blog route
+app.use("/api/v1/category",categoryRouter)
 
 
 export {app}

@@ -1,0 +1,11 @@
+.blogContent {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+.blogContent p {
+    text-align: start;
+    margin-top: 5px;
+    font-size: 16px;
+}

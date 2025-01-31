@@ -1,0 +1,19 @@
+.menu {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menuLink {
+    color: white;
+}
+
+/* Media query for small screens */
+@media screen and (max-width: 600px) {
+
+    .menu {
+        width: 100%;
+    }
+}

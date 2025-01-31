@@ -1,0 +1,25 @@
+.container {
+    min-height: 75vh;
+    /* background-color: red; */
+    display: flex;
+    margin: 30px;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.content {
+    width: 60%;
+    height: 100%;
+}
+
+/* Media query for small screens */
+@media screen and (max-width: 600px) {
+
+    .container {
+        margin: 10px;
+    }
+
+    .content {
+        width: 100%;
+    }
+}

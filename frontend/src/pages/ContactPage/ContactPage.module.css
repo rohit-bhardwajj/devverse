@@ -1,0 +1,24 @@
+/* ContactPage.module.css */
+
+.contactForm {
+    background-color: var(--background-color);
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 100px auto;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+
+
+/* Media query for small screens */
+@media (max-width: 600px) {
+    .contactForm {
+        max-width: 100%;
+    }
+}
