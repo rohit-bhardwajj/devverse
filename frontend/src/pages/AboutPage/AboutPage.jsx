@@ -11,11 +11,11 @@ const About = () => {
         // <meta name='author' content={author} />
         <Layout>
             <div className={styles.container}>
-                <h1 className={styles.heading}>About  <span style={{ color: 'var(--secondary-color)', fontWeight: 'bold', fontSize: 'inherit' }}>Q</span>uestify</h1>
+                <h1 className={styles.heading}>About  <span style={{ color: 'var(--secondary-color)', fontWeight: 'bold', fontSize: 'inherit' }}>Dev</span>verse</h1>
                 <div className={styles.content}>
                     <h3 className={styles.subheading}>Our Mission</h3>
                     <p>
-                        Questify is a versatile blogging platform where you can find a wide range of articles covering various topics from technology to lifestyle and more.
+                        Devverse is a versatile blogging platform for developers where you can find a wide range of articles covering various topics from technology to lifestyle and more.
                     </p>
 
                     <h3 className={styles.subheading}>Our Vision</h3>
@@ -25,18 +25,18 @@ const About = () => {
 
                     <h3 className={styles.subheading}>User-Friendly Experience</h3>
                     <p>
-                        At Questify, we believe in the power of knowledge-sharing and the impact it can have on shaping a better tomorrow. We strive to make learning accessible and enjoyable by offering a user-friendly interface and a seamless browsing experience.
+                        At Devverse, we believe in the power of knowledge-sharing and the impact it can have on shaping a better tomorrow. We strive to make learning accessible and enjoyable by offering a user-friendly interface and a seamless browsing experience.
                     </p>
 
                     <h3 className={styles.subheading}>Your Feedback Matters</h3>
                     <p>
-                        We are continuously improving and expanding Questify to meet the needs of our growing user base. If you have any feedback or suggestions, we'd love to hear from you! Feel free to contact us.
+                        We are continuously improving and expanding Devverse to meet the needs of our growing user base. If you have any feedback or suggestions, we'd love to hear from you! Feel free to contact us.
                     </p>
 
 
                     <h3 className={styles.subheading}>Gratitude and Impact</h3>
                     <p>
-                        Thank you for being a part of Questify. Together, let's explore, learn, and make a positive impact with our shared knowledge!
+                        Thank you for being a part of Devverse. Together, let's explore, learn, and make a positive impact with our shared knowledge!
                     </p>
                 </div>
             </div>
