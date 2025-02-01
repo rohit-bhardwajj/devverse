@@ -9,7 +9,7 @@ const PrivacyPolicyPage = () => {
                 <h1 className={styles.heading}>Privacy Policy</h1>
                 <div className={styles.content}>
                     <p>
-                        Questify is committed to protect your privacy and ensuring the security of your personal information. This Page describes how we collect, use, and safeguard your data when you use our website and services.
+                        Devverse is committed to protect your privacy and ensuring the security of your personal information. This Page describes how we collect, use, and safeguard your data when you use our website and services.
                     </p>
 
                     <h2 className={styles.subheading}>Information We Collect</h2>
