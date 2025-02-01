@@ -12,7 +12,6 @@ const BlogCard = ({ id, title, slug, description, category, createdAt }) => {
         try{
             const response = await axios.get(`/api/v1/blogs/blog-image/${id}`);
             SetBlogImage(response.data);
-            
         }
         catch (error) {
             console.log(error);
@@ -28,7 +27,6 @@ const BlogCard = ({ id, title, slug, description, category, createdAt }) => {
             <div className={styles.imageWrapper}>
             
                 <img className={styles.image} 
-                // src={BlogImage} alt={title} />
                 src={blogImage} alt={title} />
             </div>
             <div className={styles.cardContent}>

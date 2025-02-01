@@ -13,6 +13,7 @@ const ProfilePage = () => {
             <div className={styles.container}>
                 <UserMenu />
                 <div className={styles.content}>
+                    {console.log(auth)}
                     {/* <div className={styles.container} style={{ marginTop: "15px!important" }}> */}
                     <h2 className="text-body-secondary">Welcome {auth?.user?.name}</h2>
                     <h3 className="text-body-secondary">Email: <span>{auth?.user?.email}</span></h3>

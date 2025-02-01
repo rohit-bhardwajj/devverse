@@ -29,15 +29,12 @@ import LoadingScreen from './components/LoadingScreen/LoadingScreen';
 function App() {
 
   const [progress, setProgress] = useProgress();
-  // const [databaseConnected, setDatabaseConnected] = useState(false);
 
 
   return (
     <>
 
       <LoadingBar progress={progress} shadow={true} height={3} transitionTime={500} color="var(--loading-bar-gradient)" waitingTime={300} />
-
-      {/* {databaseConnected ? ( */}
 
       <Routes>
 

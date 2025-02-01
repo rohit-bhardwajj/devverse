@@ -46,34 +46,36 @@ const HomePage = () => {
     const getLatestBlogs = async () => {
         try {
             setProgress(40)
-            const { data } = await axios.get(`/api/v1/blog/get-latest-blogs`);
+            const {data} = await axios.get(`/api/v1/blogs/get-latest-blogs`);
             setProgress(80)
-            setlatestBlogs(data?.blogs)
+            setlatestBlogs(data.latestBlogs)
+            console.log("Here are blogs " + data.latestBlogs);
+            
             setProgress(100)
         } catch (error) {
             console.log(error);
         }
     };
 
-    const getLikedArticles = async () => {
-        try {
-            const { data } = await axios.get(
-                `${process.env.REACT_APP_API}/api/v1/blog/liked-blogs`,
-                {
-                    headers: {
-                        Authorization: auth?.token,
-                    },
-                }
-            );
-            setLikedArticles(data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    // const getLikedArticles = async () => {
+    //     try {
+    //         const { data } = await axios.get(
+    //             `/api/v1/blog/liked-blogs`,
+    //             {
+    //                 headers: {
+    //                     Authorization: auth?.token,
+    //                 },
+    //             }
+    //         );
+    //         setLikedArticles(data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     useEffect(() => {
         getLatestBlogs()
-        getLikedArticles()
+        // getLikedArticles()
     }, [])
     latestBlogs ? console.log(latestBlogs) : console.log("first")
     return (
@@ -120,7 +122,7 @@ const HomePage = () => {
                                 <SliderCard key={b._id} id={b._id} title={b.title} slug={b.slug} createdAt={b.createdAt} />
                             ))}
                         </Carousel>
-                    )}
+                    )} 
                 </div>
 
             </section>

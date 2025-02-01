@@ -72,16 +72,28 @@ const getAllBlogs = async (req, res) => {
     }
 };
 const getBlogPhoto = async (req, res) => {
-
+    const {identifier} = req.params
+    const isObjectId = mongoose.Types.ObjectId.isValid(identifier);
     try {
-        const blog = await Blog.findById(req.params.id).select('blogImage');
-        if (!blog || !blog.blogImage ) {
+        const blog = await Blog.aggregate([
+            {
+            $match:{
+                $or:[{_id:isObjectId? new mongoose.Types.ObjectId(identifier):null},{slug:identifier}]
+            }
+            },
+            {
+                $project:{
+                    blogImage:1
+                }
+            }
+        ])
+        if (!blog || !blog[0].blogImage ) {
             return res.status(404).send('Image not found');
         }
         // res.set('Content-type', blog.blogImage.contentType);
         console.log(blog);
         
-        return res.status(200).send(blog.blogImage);
+        return res.status(200).send(blog[0].blogImage);
     } catch (error) {
         res.status(500).send({
             success: false,
@@ -91,7 +103,6 @@ const getBlogPhoto = async (req, res) => {
     }
 
 };
-
 
 const likeBlog = async (req, res) => {
     try {
@@ -163,172 +174,106 @@ const likeBlog = async (req, res) => {
 //         "All blogs fetched successfully"
 //     ))
 // })
-const VerifyBlogs = asyncHanlder(async(req,res)=>{
-    const blogs = await Blog.aggregate([
+// const VerifyBlogs = asyncHanlder(async(req,res)=>{
+//     const blogs = await Blog.aggregate([
+//         {
+//             $match:{isVerified:false}
+//         },
+//         {
+//            $lookup:{
+//             from:"users",
+//             localField:"author",
+//             foreignField:"_id",
+//             as: "author",
+//             pipeline:[
+//                 {
+//                     $project:{
+//                         username:1,
+//                         fullName:1,
+//                         avatar:1
+//                     }
+//                 }
+//             ]
+//            } 
+//         },{
+//             $unwind:"$author"
+//         },
+//         {
+//             $project:{
+//                 title:1,
+//                 content:1,
+//                 isVerified:1,
+//                 author:1,
+//                 blogImage:1,
+//                 likes:1,
+//                 views:1,
+//                 tags:1,
+//                 createdAt:1
+//             }
+//         }
+//     ])
+
+//     return res
+//     .status(200)
+//     .json(
+//         new ApiResponse(200,
+//             {blogs:blogs},
+//             "All unverified Blogs fetched Successfully"
+//         )
+//     )
+// })//pending verification logic
+const getSingleBlogController = asyncHanlder(async(req,res)=>{
+    const {slug} = req.params;
+    if(!slug){
+        throw new ApiError(400,"Try searching existing blog");
+    }
+    const blog = await Blog.aggregate([
         {
-            $match:{isVerified:false}
-        },
-        {
-           $lookup:{
-            from:"users",
-            localField:"author",
-            foreignField:"_id",
-            as: "author",
-            pipeline:[
-                {
-                    $project:{
-                        username:1,
-                        fullName:1,
-                        avatar:1
-                    }
-                }
-            ]
-           } 
-        },{
-            $unwind:"$author"
+         $match: {
+                slug:slug,
+              }
         },
         {
             $project:{
                 title:1,
                 content:1,
-                isVerified:1,
-                author:1,
-                blogImage:1,
-                likes:1,
-                views:1,
+                description:1,
+                createdAt:1,
                 tags:1,
-                createdAt:1
             }
         }
-    ])
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(200,
-            {blogs:blogs},
-            "All unverified Blogs fetched Successfully"
-        )
+])
+if(!blog){
+    throw new ApiError(404,"Error in finding blog");
+}
+return res
+.status(200)
+.json(
+    new ApiResponse(
+        200,
+        {blog:blog[0]},
+        "Blog fetched successfully"
     )
-})//pending verification logic
+)
 
-const getVerifiedBlogById = asyncHanlder(async(req,res)=>{
-    const {id} = req.params
-    
-    if(!isValidObjectId(id)){
-        throw new ApiError(400,"Invalid Blog Id")
-    }
-    const blog =await Blog.aggregate([
-        {
-            $match: {
-                _id: new mongoose.Types.ObjectId(id),
-                isVerified: true
-              }
-              
-        },
-        {
-            $lookup:{
-                from:"users",
-                localField:"author",
-                foreignField:"_id",
-                as:"author",
-                pipeline:[{
-                    $project:{
-                        fullName:1,
-                        username:1,
-                        // avatar:1
-                    }
-                }]
-            }
-        },
-        {
-            $unwind:"$author"
-        },{
-            $project:{
-                title:1,
-                content:1,
-                createdAt:1,
-                tags:1,
-                blogImage:1,
-                author:1
-            }
-        } 
-
-    ])
-    if(!blog){
-        throw new ApiError(404,"Blog not found!")
-    }
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            {blog},
-            "Blog fetched successfully"
-        )
-    )
 })
-const getUnverifiedBlogById = asyncHanlder(async(req,res)=>{
-    const {id} = req.params
-    console.log(req.params);
-    
-    
-    if(!isValidObjectId(id)){
-        throw new ApiError(400,"Invalid Blog Id")
+const getLatestBlogs = asyncHanlder(async(req,res)=>{
+    try {
+        const latestBlogs = await Blog.find({}).sort({createdAt:-1}).select("-blogImage").populate("category").limit(10).sort({ createdAt: -1 })
+        res.status(200).send({
+            success: true,
+            message: "latest Blogs",
+            latestBlogs,
+        });
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "Error while geting latest blogs",
+            error,
+        });
     }
-    const blog =await Blog.aggregate([
-        {
-            $match: {
-                _id: new mongoose.Types.ObjectId(id),
-                isVerified: false
-              }
-              
-        },
-        {
-            $lookup:{
-                from:"users",
-                localField:"author",
-                foreignField:"_id",
-                as:"author",
-                pipeline:[{
-                    $project:{
-                        fullName:1,
-                        username:1,
-                        // avatar:1
-                    }
-                }]
-            }
-        },
-        {
-            $unwind:"$author"
-        },{
-            $project:{
-                title:1,
-                content:1,
-                createdAt:1,
-                tags:1,
-                blogImage:1,
-                author:1
-            }
-        } 
-
-    ])
-    if(!blog){
-        throw new ApiError(404,"Blog not found!")
-    }
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            {blog},
-            "Blog fetched successfully"
-        )
-    )
 })
 
 
 
-export {createBlog,likeBlog,getBlogPhoto,getAllBlogs,VerifyBlogs,getVerifiedBlogById,getUnverifiedBlogById}
+export {createBlog,likeBlog,getBlogPhoto,getAllBlogs,getSingleBlogController,getLatestBlogs}

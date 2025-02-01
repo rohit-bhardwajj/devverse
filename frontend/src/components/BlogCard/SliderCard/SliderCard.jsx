@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './sliderCard.module.css';
 import moment from 'moment'
-import { useEffect } from 'react';
+import { useEffect ,useState} from 'react';
 import axios from 'axios';
 import { TbWriting } from "react-icons/tb";
 import { Link } from 'react-router-dom';
