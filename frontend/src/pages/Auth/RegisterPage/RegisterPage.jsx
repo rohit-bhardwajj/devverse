@@ -14,13 +14,13 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     // const [phone, setPhone] = useState('');
-    const [book, setBook] = useState('');
+    const [favbook, setfavBook] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             setProgress(40)
-            const res = await axios.post(`/api/v1/users/register`, { name, email, password });
+            const res = await axios.post(`/api/v1/users/register`, { name, email, password , favbook });
             setProgress(80)
             if (res.data.success) {
                 toast.success(res.data.message);
@@ -60,7 +60,7 @@ const RegisterPage = () => {
                     </div> */}
                     <div className={styles.formGroup}>
                         <label htmlFor="book">What is your favourite Book ?</label>
-                        <input  placeholder='eg. Atomic-habits' value={book} onChange={(e) => setBook(e.target.value)} type="text" id="book" name="book" required />
+                        <input  placeholder='eg. Atomic-habits' value={favbook} onChange={(e) => setfavBook(e.target.value)} type="text" id="favbook" name="favbook" required />
                     </div>
                     <button type="submit">Register</button>
                 </form>
