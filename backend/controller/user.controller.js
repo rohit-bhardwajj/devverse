@@ -22,9 +22,9 @@ const generateAccessAndRefreshTokens = async (UserId) => {
 }
 const registerUser = asyncHandler(async (req, res) => {
 
-    const { name, email, password } = req.body;
+    const { name, email, password,favbook } = req.body;
 
-    if ([name, email, password].some((field) => field?.trim() === "")) {
+    if ([name, email, password,favbook].some((field) => field?.trim() === "")) {
         throw new ApiError(409, "All fields are compulsory")
     }
     const existedUser = await User.findOne({
@@ -39,6 +39,7 @@ const registerUser = asyncHandler(async (req, res) => {
         name,
         email,
         password,
+        favbook
     })
 
     const userCreated = await User.findById(user._id).select(
@@ -92,8 +93,7 @@ const loginUser = asyncHandler(async (req, res) => {
         user: {
             name: user.name,
             email: user.email,
-            phone: user.phone,
-            answer: user.answer,
+            book: user.favbook,
             role: user.role
         },
         token
