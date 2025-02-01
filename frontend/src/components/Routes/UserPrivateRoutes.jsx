@@ -13,7 +13,7 @@ export default function UserPrivateRoutes() {
         const checkAuthentication = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_API}/api/v1/auth/user-auth`,
+                    `/api/v1/users/user-auth`,
                     {
                         headers: {
                             Authorization: auth?.token, // Sending the user token in the request headers
