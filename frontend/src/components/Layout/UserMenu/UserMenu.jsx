@@ -28,9 +28,9 @@ const UserMenu = () => {
                 <button className={styles.menuButton}>Liked Articles</button>
             </NavLink>
 
-            {/* <NavLink exact='true' activeclassname="active" to="/user/commented-post" className={styles.menuLink}>
+            <NavLink exact='true' activeclassname="active" to="/user/commented-post" className={styles.menuLink}>
                 <button className={styles.menuButton}>Commented Post</button>
-            </NavLink> */}
+            </NavLink>
 
 
             <NavLink onClick={handleLogout} exact='true' activeclassname="active" to="/login" className={styles.menuLink}>
