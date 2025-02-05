@@ -1,12 +1,13 @@
 import { Blog } from "../models/blog.model.js";
-import asyncHanlder from '../utils/asyncHandler.js'
+import { Like } from "../models/like.model.js";
+import asyncHandler from '../utils/asyncHandler.js'
 import {ApiError} from '../utils/ApiError.js'
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import mongoose, { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId, Schema } from "mongoose";
 import slugify from "slugify";
 
-const createBlog = asyncHanlder(async(req,res)=>{
+const createBlog = asyncHandler(async(req,res)=>{
    const{title,description,content,category} = req.body;
    
    if(!title || !content|| !description ){
@@ -91,7 +92,6 @@ const getBlogPhoto = async (req, res) => {
             return res.status(404).send('Image not found');
         }
         // res.set('Content-type', blog.blogImage.contentType);
-        console.log(blog);
         
         return res.status(200).send(blog[0].blogImage);
     } catch (error) {
@@ -104,76 +104,51 @@ const getBlogPhoto = async (req, res) => {
 
 };
 
-const likeBlog = async (req, res) => {
+const toggleBlogLike = asyncHandler(async(req,res)=>{
     try {
-        // Find the blog by ID
-        // console.log(req.params);
-        const {blogId} =req.params;
-        if(!isValidObjectId(blogId)){
-            throw new ApiError(400,"Invalid blog Id")
+        const {blogId} = req.params;
+        const FoundLiked = await Like.findOne({blog:blogId,likedBy:req.user._id})
+        if(FoundLiked){
+            //delete
+             await Like.findByIdAndDelete(FoundLiked._id);
         }
-        const blog = await Blog.findById(blogId);
-        if (!blog){
-            throw new ApiError(404,"Blog not found!")
+        else{
+            //like
+          await Like.create({
+                blog:blogId,
+                likedBy:req.user?._id
+            })
         }
-        // Increment the like count
-        blog.likes += 1;
-        await blog.save();
-     return res
-     .status(200)
-     .json(new ApiResponse(200,
-        {BlogLikes:blog.likes},
-        "Blog Liked Successfully"
-     ))
+        const totalLikes = await Like.countDocuments({blog:blogId})
+        return res.status(200).json({liked:!FoundLiked,likes:totalLikes})
     } catch (error) {
-        console.error('Error liking the blog:', error);
-        res.status(500).json({ message: 'Error liking blog' });
+        console.log("Error :",error);
+        res.status(500).json({
+            message:"Server error"
+        })
     }
-};//logic to be changed as like.model is different
-// const getAllBlogs = asyncHanlder(async(req,res)=>{
-//     const blogs =await Blog.aggregate([
-//         {
-//             $match:{isVerified:true}
-//         },
-//         {
-//             $lookup:{
-//                 from:"users",
-//                 localField:"author",
-//                 foreignField:"_id",
-//                 as:"author",
-//                 pipeline:[{
-//                     $project:{
-//                         fullName:1,
-//                         username:1,
-//                         // avatar:1
-//                     }
-//                 }]
-//             }
-//         },
-//         {
-//             $unwind:"$author"
-//         },{
-//             $project:{
-//                 title:1,
-//                 content:1,
-//                 createdAt:1,
-//                 tags:1,
-//                 blogImage:1,
-//                 author:1
-//             }
-//         } 
+})
+const checkBlogLike = asyncHandler(async(req,res)=>{
+   try {
+    const {blogId} = req.params;
+    
+    const like = await Like.findOne({blog:blogId , likedBy:req.user?._id})
+    if(like){
+        return res.json({liked:true})
+    }
+    else{
+        return res.json({liked:false})
+    }
+    
+   } catch (error) {
+    console.log("Error ",error);    
+    return res.status(500).send({
+        message:"Server error"
+    })
+    
+   }
+})
 
-//     ])
-//     if(!blogs){
-//         throw new ApiError(404,"Blogs not found")
-//     }
-//     return res
-//     .status(200)
-//     .json(new ApiResponse(200,
-//         blogs,
-//         "All blogs fetched successfully"
-//     ))
-// })
 // const VerifyBlogs = asyncHanlder(async(req,res)=>{
 //     const blogs = await Blog.aggregate([
 //         {
@@ -222,7 +197,7 @@ const likeBlog = async (req, res) => {
 //         )
 //     )
 // })//pending verification logic
-const getSingleBlogController = asyncHanlder(async(req,res)=>{
+const getSingleBlogController = asyncHandler(async(req,res)=>{
     const {slug} = req.params;
     if(!slug){
         throw new ApiError(400,"Try searching existing blog");
@@ -235,29 +210,41 @@ const getSingleBlogController = asyncHanlder(async(req,res)=>{
         },
         {
             $project:{
+               _id:1,
                 title:1,
                 content:1,
                 description:1,
                 createdAt:1,
                 tags:1,
-            }
+            } 
         }
 ])
+const totalLikes = await Like.countDocuments({blog:blog[0]._id})
+console.log("Found itne likes in controller :",totalLikes);
+
+
 if(!blog){
     throw new ApiError(404,"Error in finding blog");
 }
+// if(!totalLikes){
+//     throw new ApiError(404,"Error in calculating likes");
+// }
 return res
 .status(200)
-.json(
-    new ApiResponse(
-        200,
-        {blog:blog[0]},
-        "Blog fetched successfully"
-    )
+.json({
+    blog:blog[0],
+    likes:totalLikes
+}
+    // new ApiResponse(
+    //     200,
+    //     {blog:blog[0]},
+    //     {likes:totalLikes},
+    //     "Blog fetched successfully"
+    // )
 )
 
 })
-const getLatestBlogs = asyncHanlder(async(req,res)=>{
+const getLatestBlogs = asyncHandler(async(req,res)=>{
     try {
         const latestBlogs = await Blog.find({}).sort({createdAt:-1}).select("-blogImage").populate("category").limit(10).sort({ createdAt: -1 })
         res.status(200).send({
@@ -276,4 +263,4 @@ const getLatestBlogs = asyncHanlder(async(req,res)=>{
 
 
 
-export {createBlog,likeBlog,getBlogPhoto,getAllBlogs,getSingleBlogController,getLatestBlogs}
+export {createBlog,checkBlogLike,toggleBlogLike,getBlogPhoto,getAllBlogs,getSingleBlogController,getLatestBlogs}
