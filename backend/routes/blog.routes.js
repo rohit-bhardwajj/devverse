@@ -2,15 +2,13 @@ import {Router} from 'express'
 import { Blog } from '../models/blog.model.js';
 import {User} from '../models/user.model.js'
 import { isAdmin, verifyJWT } from '../middleware/auth.middleware.js';
-import { createBlog, getAllBlogs, getBlogPhoto,getSingleBlogController, getLatestBlogs, likeBlog } from '../controller/blog.controller.js';
+import { createBlog, getAllBlogs, getBlogPhoto,getSingleBlogController, getLatestBlogs, checkBlogLike, toggleBlogLike, getLikedBlogs } from '../controller/blog.controller.js';
 import {upload} from '../middleware/multer.middleware.js'
 const router = Router();
 
 
 // Route to create a new blog post (with image upload)
 router.route("/create-blog").post(upload.single("blogImage"),createBlog);
-
-// Route to get all verified blog posts
 router.route("/all-blogs").get(getAllBlogs)
 router.route("/blog-image/:identifier").get(getBlogPhoto)
 router.route("/get-blog/:slug").get(getSingleBlogController);
@@ -42,42 +40,10 @@ router.route("/get-latest-blogs").get(getLatestBlogs);
 //         res.status(500).json({ error: 'Failed to delete blog' });
 //     }
 // });
-
-// Route to get all unverified blog posts (admin only)
-// router.get('/admin', verifyJWT, );
-
 // Route to like or unlike a blog post
-router.post('/like/:id', async (req, res) => {
-    try {
-        const blog = await Blog.findById(req.params._id);
-        const user = await User.findById(req.user._id);
-        
-        if (!blog || !user) return res.status(404).json({ error: 'Blog or User not found' });
-
-        const hasLiked = user.likedBlogs.includes(blog._id);
-        // const hasLiked = user.likedBlogs.includes(blog.id);
-        
-        if (hasLiked) {
-            // Unlike the blog
-            user.likedBlogs = user.likedBlogs.filter(id => id.toString() !== blog._id.toString());
-            if(blog.likes>0){
-                blog.likes -= 1;
-            }
-        } else {
-            // Like the blog
-            user.likedBlogs.push(blog._id);
-            // user.likedBlogs.push(blog.id);
-            blog.likes += 1;
-        }
-
-        await user.save();
-        await blog.save();
-        res.json({ likes: blog.likes });
-    } catch (error) {
-        res.status(500).json({ error: 'Error updating likes' });
-    }
-},likeBlog);
-
+router.route("/check-blog-like/:blogId").get(verifyJWT,checkBlogLike)
+router.route("/like-blog/:blogId").post(verifyJWT,toggleBlogLike)
+router.route("/get-liked-blogs").get(verifyJWT,getLikedBlogs)
 // Route to get all blogs liked by the user
 router.get('/liked-blogs', async (req, res) => {
     try {
