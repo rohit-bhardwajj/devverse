@@ -44,16 +44,15 @@ const BlogPage = () => {
 
     const getBlog = async () => {
         try {
-            const response = await axios.get(`/api/v1/blogs/get-blog/${slug}`);
+            const {data} = await axios.get(`/api/v1/blogs/get-blog/${slug}`);
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             })
-            setBlog(response?.data.data.blog);
-            console.log("This is blog data ");
-            console.log(response.data);
+            setBlog(data?.blog);
+            setLikes(data?.likes);
+            console.log("This much likes:",data.likes);
             
-            // setLikes(data?.totalLikes);
             // getRelatedBlogs(data?.blog?._id, data?.blog?.category?._id)
             setLoading(false)
         } catch (error) {
@@ -62,24 +61,24 @@ const BlogPage = () => {
         }
     };
 
-    // const checkLikedStatus = async () => {
-    //     if (auth?.user && blog?._id) {
-    //         try {
-    //             const response = await axios.get(
-    //                 `/api/v1/blog/check-blog-liked/${blog._id}`,
-    //                 {
-    //                     headers: {
-    //                         Authorization: auth?.token,
-    //                     },
-    //                 }
-    //             );
-    //             setLiked(response.data.liked);
+    const checkLikedStatus = async () => {
+        if (auth?.user && blog?._id) {
+            try {
+                const response = await axios.get(
+                    `/api/v1/blogs/check-blog-like/${blog._id}`,
+                    {
+                        headers: {
+                            Authorization: auth?.token,
+                        },
+                    }
+                );
+                setLiked(response.data.liked);
 
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    // };
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
     // const getRelatedBlogs = async (pid, cid) => {
     //     try {
     //         const { data } = await axios.get(
@@ -106,49 +105,48 @@ const BlogPage = () => {
     }
     useEffect(() => {
             getBlogImage();
-            // console.log(BlogImage + " is an image");
             
         }, []);
 
     useEffect(() => {
-        // checkLikedStatus();
+        checkLikedStatus();
     }, [auth, blog?._id]);
 
-    // const handleLike = async () => {
-    //     if (!auth?.user) {
-    //         toast.error('Login To Like');
-    //         return;
-    //     }
+    const handleLike = async () => {
+        if (!auth?.user) {
+            toast.error('Login To Like');
+            return;
+        }
 
-    //     if (likeProcessing) {
-    //         // If the like button is already being processed, prevent multiple clicks
-    //         return;
-    //     }
+        if (likeProcessing) {
+            // If the like button is already being processed, prevent multiple clicks
+            return;
+        }
 
-    //     try {
-    //         setLikeProcessing(true);
-    //         setLiked(!liked);
-    //         if (liked) {
-    //             setLikes((prev) => prev - 1);
-    //         } else {
-    //             setLikes((prev) => prev + 1);
-    //         }
-    //         const { data } = await axios.post(
-    //             `/api/v1/blog/like-blog/${blog?._id}`,
-    //             {}, // Empty request data
-    //             {
-    //                 headers: {
-    //                     Authorization: auth?.token,
-    //                 },
-    //             }
-    //         );
+        try {
+            setLikeProcessing(true);
+            setLiked(!liked);
+            if (liked) {
+                setLikes((prev) => prev - 1);
+            } else {
+                setLikes((prev) => prev + 1);
+            }
+            const { data } = await axios.post(
+                `/api/v1/blogs/like-blog/${blog?._id}`,
+                {}, // Empty request data
+                {
+                    headers: {
+                        Authorization: auth?.token,
+                    },
+                }
+            );
 
-    //     } catch (error) {
-    //         console.log(error.response);
-    //     } finally {
-    //         setLikeProcessing(false);
-    //     }
-    // };
+        } catch (error) {
+            console.log(error.response);
+        } finally {
+            setLikeProcessing(false);
+        }
+    };
     return (
         <Layout
             title={blog?.title}
@@ -172,13 +170,14 @@ const BlogPage = () => {
                             <BlogContent content={blog.content} />
                             <div className={styles.others}>
                                 <div className={styles.blogLike}>
-                                    {/* <button onClick={handleLike} className={styles.likeButton}>
+                                    <button onClick={handleLike} className={styles.likeButton}>
+                                    {/* <button  className={styles.likeButton}> */}
                                         {liked ? <AiFillHeart style={{ fontSize: '2rem' }} /> : <AiOutlineHeart style={{ fontSize: '2rem' }} />}
                                         <span>{likes} likes</span>
-                                    </button> */}
+                                    </button>
                                 </div>
                                 <div className={styles.blogInfo}>
-                                    <span className={styles.blogDate}>{moment(blog?.createdAt).fromNow()} by Rohit</span>
+                                    <span className={styles.blogDate}>{moment(blog?.createdAt).fromNow()} by {'\u2022'} Rohit Bhardwaj</span>
                                 </div>
                             </div>
                         </div>
