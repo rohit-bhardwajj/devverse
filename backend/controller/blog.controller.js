@@ -6,6 +6,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose, { isValidObjectId, Schema } from "mongoose";
 import slugify from "slugify";
+import { User } from "../models/user.model.js";
 
 const createBlog = asyncHandler(async(req,res)=>{
    const{title,description,content,category} = req.body;
@@ -118,6 +119,7 @@ const toggleBlogLike = asyncHandler(async(req,res)=>{
                 blog:blogId,
                 likedBy:req.user?._id
             })
+            
         }
         const totalLikes = await Like.countDocuments({blog:blogId})
         return res.status(200).json({liked:!FoundLiked,likes:totalLikes})
@@ -148,6 +150,108 @@ const checkBlogLike = asyncHandler(async(req,res)=>{
     
    }
 })
+const getLikedBlogs = asyncHandler(async(req,res)=>{
+    const userId = req.user._id;
+    if(!userId) throw new ApiError(400,"Login to access Blogs")
+    // const likedBlogs = await Like.find({likedBy:userId}).populate("blog");
+    const likedBlogs = await Like.aggregate([
+        {
+            $match:{
+                likedBy:new mongoose.Types.ObjectId(userId)
+            }
+        },
+        {
+            $lookup:{
+                from:"blogs",
+                localField:"blog",
+                foreignField:"_id",
+                as:"blog",
+                pipeline:[
+                    {
+                        $lookup:{
+                        from : "categories",
+                        localField:"category",
+                        foreignField:"_id",
+                        as:"category"
+                    }
+                    },
+                    {
+                        $unwind:"$category"
+                    },
+                    {
+                        $project:{
+                        title:1,
+                        content:1,
+                        description:1,
+                        category:1,
+                        blogImage:1,
+                        slug:1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $unwind:"$blog"
+        },
+        {
+            $project:{
+                blog:1,
+                likedBy:1
+            }
+        }
+    ]);
+    if(!likedBlogs){
+        throw new ApiError(500,"Error in getting liked blogs")
+    }
+    console.log(likedBlogs + " are here");
+    
+    return res.status(200).json({
+        likedBlogs,
+        message:"Fetched liked blogs successfully"
+    })
+})
+// const getLikedBlogs = asyncHandler(async(req,res)=>{
+//     const userId = req.user?._id;
+//     if(!userId){
+//         throw new ApiError(400,"Login to access liked blogs")
+//     }
+//     const LikedBlogs = await Like.aggregate([
+//         {
+//             $match:{
+//                 likedBy:new mongoose.Types.ObjectId(userId)
+//             }
+//         },{
+//             $lookup:{
+//                 from:"blogs",
+//                 localField:"blog",
+//                 foreignField:"_id",
+//                 as: "likedBlogs",
+                
+//                 pipeline:[{
+//                     $project:{
+//                         title:1,
+//                         description:1,
+//                         content:1,
+                        
+//                     }
+//                 }]
+//             }
+//         }
+//         ,{
+//             $unwind:"$likedBlogs"
+//     }
+//     ])
+//     console.log("These are liked blogs from controller:",LikedBlogs[0]);
+    
+//     if(!LikedBlogs){
+//         throw new ApiError(500,"Error in finding liked blogs")
+//     }
+//     return res.status(200).json({
+//         LikedBlogs,
+//         message:"Fetched liked blogs successfully"
+//     })
+// })
 
 // const VerifyBlogs = asyncHanlder(async(req,res)=>{
 //     const blogs = await Blog.aggregate([
@@ -220,27 +324,20 @@ const getSingleBlogController = asyncHandler(async(req,res)=>{
         }
 ])
 const totalLikes = await Like.countDocuments({blog:blog[0]._id})
-console.log("Found itne likes in controller :",totalLikes);
 
 
 if(!blog){
     throw new ApiError(404,"Error in finding blog");
 }
-// if(!totalLikes){
-//     throw new ApiError(404,"Error in calculating likes");
-// }
+if(!totalLikes){
+    throw new ApiError(404,"Error in calculating likes");
+}
 return res
 .status(200)
 .json({
     blog:blog[0],
     likes:totalLikes
 }
-    // new ApiResponse(
-    //     200,
-    //     {blog:blog[0]},
-    //     {likes:totalLikes},
-    //     "Blog fetched successfully"
-    // )
 )
 
 })
@@ -263,4 +360,4 @@ const getLatestBlogs = asyncHandler(async(req,res)=>{
 
 
 
-export {createBlog,checkBlogLike,toggleBlogLike,getBlogPhoto,getAllBlogs,getSingleBlogController,getLatestBlogs}
+export {createBlog,checkBlogLike,toggleBlogLike,getLikedBlogs,getBlogPhoto,getAllBlogs,getSingleBlogController,getLatestBlogs}
