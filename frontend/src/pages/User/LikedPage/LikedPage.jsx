@@ -10,14 +10,14 @@ import LoadingScreen from '../../../components/LoadingScreen/LoadingScreen';
 const LikedPage = () => {
     const [auth, setAuth] = useAuth();
     const [progress, setProgress] = useProgress();
-    const [likedArticles, setLikedArticles] = useState([]);
+    const [likedBlogs, setLikedBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const getLikedArticles = async () => {
+    const getLikedBlogs = async () => {
         try {
             setProgress(40);
             const { data } = await axios.get(
-                `${process.env.REACT_APP_API}/api/v1/blog/liked-blogs`,
+                `/api/v1/blogs/get-liked-blogs`,
                 {
                     headers: {
                         Authorization: auth?.token,
@@ -25,7 +25,9 @@ const LikedPage = () => {
                 }
             );
             setProgress(80);
-            setLikedArticles(data);
+            setLikedBlogs(data.likedBlogs);
+            console.log("are liked blogs ",data.likedBlogs);
+            
             setProgress(100);
             setLoading(false);
         } catch (error) {
@@ -35,27 +37,27 @@ const LikedPage = () => {
     };
 
     useEffect(() => {
-        getLikedArticles();
+        getLikedBlogs();
     }, []);
 
     return (
         <Layout>
             <div className={styles.BlogPageWrapper}>
-                <h1>Liked Articles By {auth?.user?.name}</h1>
+                <h1>Liked Blogs By {auth?.user?.name}</h1>
                 {loading ? (
                     <div><LoadingScreen /></div>
-                ) : likedArticles.length === 0 ? (
-                    <div className={styles.empty}>You have not liked any articles yet.</div>
+                ) : likedBlogs.length === 0 ? (
+                    <div className={styles.empty}>You have not liked any Blogs yet.</div>
                 ) : (
-                    likedArticles.map((b) => (
+                    likedBlogs.map((b) => (
                         <BlogCard
-                            key={b.blogs._id}
-                            id={b.blogs._id}
-                            title={b.blogs.title}
-                            slug={b.blogs.slug}
-                            description={b.blogs.description}
-                            category={b.blogs.category}
-                            createdAt={b.blogs.createdAt}
+                            key={b.blog._id}
+                            id={b.blog._id}
+                            title={b.blog.title}
+                            slug={b.blog.slug}
+                            description={b.blog.description}
+                            category={b.blog.category.name}
+                            createdAt={b.blog.createdAt}
                         />
 
                     ))
